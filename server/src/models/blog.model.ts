@@ -18,6 +18,7 @@ const blogSchema = new Schema<IBlogSchema>(
     userId: {
       type: String,
       required: true,
+      ref: "user",
     },
     heading: {
       type: String,
@@ -52,6 +53,6 @@ const blogSchema = new Schema<IBlogSchema>(
   { timestamps: true }
 );
 
-const blogModel = mongoose.model<IBlogSchema>("Blog", blogSchema);
+const blogModel = mongoose.model<IBlogSchema>("blog", blogSchema);
 
 export default blogModel;
