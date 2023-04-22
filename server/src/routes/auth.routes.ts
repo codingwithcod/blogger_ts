@@ -1,7 +1,7 @@
 import express from "express";
-import { getController } from "../controllers/auth.controller";
+import { signIn } from "../controllers/auth.controller";
 const authRoutes = express.Router();
 
-authRoutes.get("/", getController);
+authRoutes.post("/signin", signIn);
 
 export default authRoutes;
