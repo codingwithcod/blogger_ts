@@ -39,10 +39,29 @@ export const getOneBlog: RequestHandler = async (req, res, next) => {
   try {
     const blog = await blogModel
       .findById(id)
-      .populate("userId", { name: 1, email: 1, picture: 1 });
+      .populate("userId", { name: 1, email: 1, picture: 1, followers: 1 });
     res
       .status(200)
       .json({ success: true, message: "Blog fetched successfully", blog });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// /** ohter blogs from user */
+export const ohterFromUser: RequestHandler = async (req, res, next) => {
+  const { id } = req.params;
+  const { userId } = req.query;
+  try {
+    let blogs = await blogModel.find({ userId, isPublish: true }).limit(5);
+    blogs = blogs.filter((blog) => blog._id != id);
+    if (blogs.length === 0)
+      return res
+        .status(200)
+        .json({ success: true, message: "Blog not found", blogs });
+    res
+      .status(200)
+      .json({ success: true, message: "Blog fetched succefully", blogs });
   } catch (error) {
     next(error);
   }

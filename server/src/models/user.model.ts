@@ -5,6 +5,8 @@ export interface IBaseUser {
   email: string;
   sub: string;
   picture: string;
+  followers: string[];
+  followings: string[];
 }
 
 export interface IUserSchema extends IBaseUser, Document {}
@@ -27,6 +29,18 @@ const userSchema = new Schema<IUserSchema>(
       type: String,
       required: true,
     },
+    followers: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    followings: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
