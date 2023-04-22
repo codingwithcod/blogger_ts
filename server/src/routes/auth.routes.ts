@@ -1,7 +1,10 @@
 import express from "express";
-import { getController } from "../controllers/auth.controller";
+import { signIn, validateToken } from "../controllers/auth.controller";
+import validate from "../middleware/validate";
+import { signInSchema, validateTokenSchema } from "../validation/auth.schema";
 const authRoutes = express.Router();
 
-authRoutes.get("/", getController);
+authRoutes.post("/signin", validate(signInSchema), signIn);
+authRoutes.get("/validate-token", validate(validateTokenSchema), validateToken);
 
 export default authRoutes;
