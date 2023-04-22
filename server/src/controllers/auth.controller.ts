@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import userModel from "../models/user.model";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_FOR_SIGNIN } from "../config";
+import verifyJwt from "../utils/verifyJwt";
 
 export const signIn: RequestHandler = async (req, res, next) => {
   const { name, email, sub, picture } = req.body;
@@ -36,6 +37,33 @@ export const signIn: RequestHandler = async (req, res, next) => {
         access_token,
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const validateToken: RequestHandler = async (req, res, next) => {
+  const { token } = req.query;
+  try {
+    if (!token)
+      return res
+        .status(404)
+        .json({ success: false, message: "Token is required for validation" });
+
+    const decoded = verifyJwt<{ userId: string }>(token, JWT_SECRET_FOR_SIGNIN);
+    if (!decoded)
+      return res
+        .status(401)
+        .json({ success: false, message: "Token is invalid or expired" });
+
+    const user = await userModel.findById(decoded.userId);
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    res
+      .status(200)
+      .json({ success: true, message: "Token validate successfully" });
   } catch (error) {
     next(error);
   }
