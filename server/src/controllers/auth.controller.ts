@@ -25,6 +25,7 @@ export const signIn: RequestHandler = async (req, res, next) => {
         success: true,
         message: "User signin successfully",
         access_token,
+        picture,
       });
     } else {
       const access_token = jwt.sign(
@@ -37,6 +38,7 @@ export const signIn: RequestHandler = async (req, res, next) => {
         success: true,
         message: "User login successfully",
         access_token,
+        picture,
       });
     }
   } catch (error) {
