@@ -17,7 +17,8 @@ export const signIn: RequestHandler = async (req, res, next) => {
       });
       const access_token = jwt.sign(
         { userId: newUser._id },
-        JWT_SECRET_FOR_SIGNIN
+        JWT_SECRET_FOR_SIGNIN,
+        { expiresIn: "5d" }
       );
 
       res.status(201).json({
@@ -28,7 +29,8 @@ export const signIn: RequestHandler = async (req, res, next) => {
     } else {
       const access_token = jwt.sign(
         { userId: isUser._id },
-        JWT_SECRET_FOR_SIGNIN
+        JWT_SECRET_FOR_SIGNIN,
+        { expiresIn: "5d" }
       );
 
       res.status(200).json({
