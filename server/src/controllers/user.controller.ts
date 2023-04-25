@@ -1,7 +1,9 @@
 import { RequestHandler } from "express-serve-static-core";
+import mongoose from "mongoose";
 import blogModel from "../models/blog.model";
 import userModel from "../models/user.model";
 
+/** for user profile details */
 export const getMe: RequestHandler = async (req, res, next) => {
   const { userId } = res.locals.user;
   try {
@@ -56,21 +58,99 @@ export const followAnUnfollowUser: RequestHandler = async (req, res, next) => {
 // /** for check if user followed or not */
 export const isUserFollowed: RequestHandler = async (req, res, next) => {
   const { userId } = res.locals.user;
-  const { id } = req.params;
+  const { blogUserId } = req.params;
   try {
-    if (userId == id) {
+    if (userId == blogUserId) {
       res.status(200).json({
         success: true,
         isSelf: true,
       });
     }
     const user = await userModel.findById(userId);
-    const isFollowed = user?.followings.includes(id);
+    const isFollowed = user?.followings.includes(blogUserId);
 
     res.status(200).json({
       success: true,
       isFollowed,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** for the user specific published blogs */
+export const getMyPublishBlogs: RequestHandler = async (req, res, next) => {
+  const { userId } = res.locals.user;
+  // for pagination
+  const responsePerPage = 10;
+  const currentPage = Number(req.query.page) || 1;
+  const skip = responsePerPage * Math.abs(currentPage - 1);
+  try {
+    const blogs = await blogModel
+      .find({ userId, isPublish: true })
+      .limit(responsePerPage)
+      .skip(skip)
+      .populate("userId", { name: 1, picture: 1 });
+    res.status(200).json({ success: true, message: "Blog fetched", blogs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/** for the user specific saved blogs */
+export const getMySavedBlogs: RequestHandler = async (req, res, next) => {
+  const { userId } = res.locals.user;
+  // for pagination
+  const responsePerPage = 10;
+  const currentPage = Number(req.query.page) || 1;
+  const skip = responsePerPage * Math.abs(currentPage - 1);
+  try {
+    const blogs = await blogModel
+      .find({ userId, isPublish: false })
+      .limit(responsePerPage)
+      .skip(skip)
+      .populate("userId", { name: 1, picture: 1 });
+    res.status(200).json({ success: true, message: "Blog fetched", blogs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// /** publish or un publish blogs both */
+export const handlePublishOrUnPublish: RequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  const { blogId } = req.params;
+  try {
+    const blog = await blogModel.findByIdAndUpdate(blogId);
+    if (!blog)
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
+    if (blog.isPublish === true) {
+      await blog.updateOne({ isPublish: false });
+      res.status(200).json({ success: true, message: "Blog unPublished" });
+    } else {
+      await blog.updateOne({ isPublish: true });
+      res.status(200).json({ success: true, message: "Blog published" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// /** deleting user's blog */
+export const deleteBlog: RequestHandler = async (req, res, next) => {
+  const { blogId } = req.params;
+  try {
+    const blog = await blogModel.findByIdAndDelete(blogId);
+    if (!blog)
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
+    res.status(200).json({ success: true, message: "Blog deleted" });
   } catch (error) {
     next(error);
   }
