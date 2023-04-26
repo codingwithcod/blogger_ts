@@ -7,6 +7,7 @@ import { IoIosCreate } from "react-icons/io";
 import MyBlogs from "../components/profleCompo/MyBlogs";
 import SavedBlogs from "../components/profleCompo/SavedBlogs";
 import { Toaster } from "react-hot-toast";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Profile = () => {
   const [user, setUser] = useState({});
@@ -26,7 +27,7 @@ const Profile = () => {
   /** for fetching user profile */
   useEffect(() => {
     const userData = async () => {
-      const response = await fetch(`http://localhost:3991/api/user`, {
+      const response = await fetch(`${BASE_URL}/user`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

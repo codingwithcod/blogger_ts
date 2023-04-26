@@ -6,11 +6,11 @@ import Navbar from "./components/Navbar";
 import SideMenu from "./components/SideMenu";
 import useAuthStore from "./store/authStore";
 import SearchResult from "./pages/SearchResult";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const App = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const { userProfile } = useAuthStore();
-
   return (
     <>
       <BrowserRouter>

@@ -7,6 +7,7 @@ import useAuthStore from "../store/authStore";
 import { toast, Toaster } from "react-hot-toast";
 import { AiFillLike } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const BlogCard = ({ blog }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -17,16 +18,13 @@ const BlogCard = ({ blog }) => {
   /** check blog already like or not */
   useEffect(() => {
     const isLikedBlog = async () => {
-      const response = await fetch(
-        `http://localhost:3991/api/blog/is-liked/${_id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userProfile.access_token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/blog/is-liked/${_id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userProfile.access_token}`,
+        },
+      });
       const data = await response.json();
       if (response.ok) {
         setIsLiked(data.isLiked);
@@ -39,16 +37,13 @@ const BlogCard = ({ blog }) => {
   }, [userProfile]);
 
   const likeBlog = async () => {
-    const response = await fetch(
-      `http://localhost:3991/api/blog/like-blog/${_id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userProfile.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/blog/like-blog/${_id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userProfile.access_token}`,
+      },
+    });
     const data = await response.json();
   };
 

@@ -6,27 +6,24 @@ import moment from "moment";
 import useAuthStore from "../store/authStore";
 import OtherFromCard from "../components/OtherFromCard";
 import BlogCard from "../components/BlogCard";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SearchResult = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q");
   const [blog, setBlog] = useState([]);
-  console.log("------------", blog);
   const { userProfile } = useAuthStore();
 
   /** for fetching single blog data */
   useEffect(() => {
     const blogData = async () => {
-      const response = await fetch(
-        `http://localhost:3991/api/blog/search?q=${query}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userProfile?.access_token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/blog/search?q=${query}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userProfile?.access_token}`,
+        },
+      });
       const data = await response.json();
       if (data.success == false) {
         navigate("/");
@@ -37,26 +34,6 @@ const SearchResult = () => {
     };
     blogData();
   }, [query]);
-
-  /** for fechting other blogs from user's blog */
-  //   useEffect(() => {
-  //     const fetchOtherBlogFromUser = async () => {
-  //       const response = await fetch(
-  //         `http://localhost:3991/api/blog/other-from-user/${blog?._id}?userId=${blog?.userId?._id}`,
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setOtherFromUser(data.blogs);
-  //       }
-  //     };
-  //     fetchOtherBlogFromUser();
-  //   }, [blog]);
 
   return (
     <div className="main_container flex">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Sidebar, BlogCard } from "../components";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,7 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     const blogData = async () => {
-      const response = await fetch("http://localhost:3991/api/blog", {
+      const response = await fetch(`${BASE_URL}/blog`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
