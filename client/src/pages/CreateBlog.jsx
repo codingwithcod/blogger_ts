@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 import useAuthStore from "../store/authStore";
 import Dropdown from "../components/Dropdown";
@@ -44,7 +45,7 @@ const CreateBlog = () => {
           isPublish,
         };
 
-        const response = await fetch("http://localhost:3991/api/blog", {
+        const response = await fetch(`${BASE_URL}/blog`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

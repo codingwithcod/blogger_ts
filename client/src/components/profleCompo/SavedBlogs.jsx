@@ -8,6 +8,7 @@ import { MdCloudDone } from "react-icons/md";
 import { AiOutlineDelete } from "react-icons/ai";
 import { toast } from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SavedBlogs = () => {
   const { userProfile } = useAuthStore();
@@ -16,16 +17,13 @@ const SavedBlogs = () => {
   // /** for fetching my blogs section blogs */
   useEffect(() => {
     const fetchMyBlogs = async () => {
-      const response = await fetch(
-        `http://localhost:3991/api/user/my-saved-blog`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userProfile.access_token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/user/my-saved-blog`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userProfile.access_token}`,
+        },
+      });
       const data = await response.json();
       if (data.success == false) {
         navigate("/");
@@ -38,16 +36,13 @@ const SavedBlogs = () => {
 
   /** Publish or unPublish blog  */
   async function handlePublishBlog(id) {
-    const response = await fetch(
-      `http://localhost:3991/api/user/publish-blog/${id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userProfile.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/user/publish-blog/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userProfile.access_token}`,
+      },
+    });
     const data = await response.json();
     if (response.ok) {
       toast.success(data.message);
@@ -58,16 +53,13 @@ const SavedBlogs = () => {
 
   /** Delete blog  */
   async function handleDeleteBlog(id) {
-    const response = await fetch(
-      `http://localhost:3991/api/user/delete-blog/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userProfile.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/user/delete-blog/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userProfile.access_token}`,
+      },
+    });
     const data = await response.json();
     if (response.ok) {
       toast.success(data.message);

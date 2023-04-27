@@ -7,6 +7,7 @@ import FollowIcon from "../assets/follow.svg";
 import FollowedIcon from "../assets/followed.svg";
 import useAuthStore from "../store/authStore";
 import OtherFromCard from "../components/OtherFromCard";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -22,7 +23,7 @@ const BlogDetail = () => {
   /** for fetching single blog data */
   useEffect(() => {
     const blogData = async () => {
-      const response = await fetch(`http://localhost:3991/api/blog/${id}`, {
+      const response = await fetch(`${BASE_URL}/blog/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +45,7 @@ const BlogDetail = () => {
   useEffect(() => {
     const isFollow = async () => {
       const response = await fetch(
-        `http://localhost:3991/api/user/is-follow/${blog?.userId?._id}`,
+        `${BASE_URL}/user/is-follow/${blog?.userId?._id}`,
         {
           method: "GET",
           headers: {
@@ -69,7 +70,7 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchOtherBlogFromUser = async () => {
       const response = await fetch(
-        `http://localhost:3991/api/blog/other-from-user/${blog?._id}?userId=${blog?.userId?._id}`,
+        `${BASE_URL}/blog/other-from-user/${blog?._id}?userId=${blog?.userId?._id}`,
         {
           method: "GET",
           headers: {
@@ -86,16 +87,13 @@ const BlogDetail = () => {
   }, [blog]);
 
   const handleFollowUser = async (id) => {
-    const response = await fetch(
-      `http://localhost:3991/api/user/follow/${id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userProfile.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/user/follow/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userProfile.access_token}`,
+      },
+    });
     if (response.ok) {
       const res = await response.json();
       toast.success(res.message);
