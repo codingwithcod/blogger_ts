@@ -30,7 +30,7 @@ const Navbar = ({ setOpenMenu }) => {
   });
 
   return (
-    <div className="flex justify-between items-center bg-slate-50 h-auto p-3 fixed top-0 w-full z-40 border-b border-slate-200 max-w-[1200px]">
+    <div className="flex justify-between items-center bg-slate-50 h-auto p-3 fixed top-0 w-full z-40 border-b border-slate-200 max-w-[1300px]">
       <div className="flex justify-center items-center gap-3 md:ml-4 text-2xl">
         <div
           onClick={() => setOpenMenu(true)}
@@ -46,7 +46,7 @@ const Navbar = ({ setOpenMenu }) => {
 
       <div className="flex gap-4 md:gap-8  items-center">
         {userProfile && (
-          <Link to="/create-blog">
+          <Link to="/create-blog?new=true">
             <button className="px-2 py-1 md:py-[1px]  bg-indigo-500 hover:bg-indigo-600 text-white rounded-md  text-md sm:text-lg flex justify-center items-center gap-2">
               <span className="hidden md:block">Create</span>{" "}
               <IoCreateOutline />

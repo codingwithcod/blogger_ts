@@ -7,11 +7,13 @@ import { IoCreateOutline } from "react-icons/io5";
 import { MdOutlineUnpublished } from "react-icons/md";
 import { AiOutlineDelete } from "react-icons/ai";
 import { toast, Toaster } from "react-hot-toast";
+import LoadingBlogCard from "../Loading/LoadingBlogCard";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MyBlogs = () => {
   const { userProfile } = useAuthStore();
   const [blogs, setBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // /** for fetching my blogs section blogs */
   useEffect(() => {
@@ -28,6 +30,7 @@ const MyBlogs = () => {
         navigate("/");
       } else {
         setBlogs(data.blogs);
+        setIsLoading(false);
       }
     };
     fetchMyBlogs();
@@ -71,6 +74,12 @@ const MyBlogs = () => {
     <div className="m-2 flex  justify-center ">
       <Toaster />
       <div className="flex flex-col overflow-y-auto scrollHide h-[55vh]  w-[9n0%]  mt-2">
+        {isLoading && (
+          <>
+            <LoadingBlogCard />
+            <LoadingBlogCard />
+          </>
+        )}
         {blogs.length == 0 ? (
           <div className="text-2xl font-semibold mt-10 text-blue-500">
             No Blogs found
@@ -146,10 +155,12 @@ const MyBlogs = () => {
                     <span>UnPublish</span>
                     <MdOutlineUnpublished />
                   </button>
-                  <button className="px-3 md:px-5 py-1 md:py-[6px]  text-green-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-green-100 hover:border-green-100  cursor-pointer gap-1">
-                    <span>Edit</span>
-                    <IoCreateOutline />
-                  </button>
+                  <Link to={`/create-blog?new=false&id=${_id}`}>
+                    <button className="px-3 md:px-5 py-1 md:py-[6px]  text-green-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-green-100 hover:border-green-100  cursor-pointer gap-1">
+                      <span>Edit</span>
+                      <IoCreateOutline />
+                    </button>
+                  </Link>
                   <button
                     onClick={() => handleDeleteBlog(_id)}
                     className="px-3 md:px-5 py-1 md:py-[6px]  text-red-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-red-100 hover:border-red-100  cursor-pointer gap-1"

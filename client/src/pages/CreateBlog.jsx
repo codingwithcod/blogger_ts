@@ -3,7 +3,7 @@ import { useState, useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 import { toast } from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,18 +14,56 @@ import { MdCloudDone, MdOutlineDataSaverOn } from "react-icons/md";
 const CreateBlog = () => {
   const [content, setContent] = useState("");
   const [formData, setFormData] = useState("");
-  const [isPublish, setIsPublish] = useState(false);
+  console.log(">>>>>>>>>>>>>>>>>", formData);
   const [category, setCategory] = useState({ category: "Select Category" });
+  const [isPublish, setIsPublish] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isNewBlog = searchParams.get("new");
+  const editBlogId = searchParams.get("id");
 
   const { userProfile } = useAuthStore();
   const editor = useRef(null);
   const navigate = useNavigate();
 
+  /** ------------------------------ */
   useEffect(() => {
     if (!userProfile) {
       navigate("/");
     }
   });
+  /** -----------  FOR EDIT BLOG ---------- */
+  useEffect(() => {
+    if (isNewBlog === true) {
+    } else {
+      console.log("this is edit blog--------");
+      if (editBlogId) {
+        const blogData = async () => {
+          const response = await fetch(`${BASE_URL}/blog/${editBlogId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userProfile?.access_token}`,
+            },
+          });
+          const data = await response.json();
+          if (data.success == false) {
+            navigate("/");
+          } else {
+            setContent(data.blog.content);
+            setFormData({
+              heading: data.blog.heading,
+              fImage: data.blog.fImage,
+              description: data.blog.description,
+            });
+            setCategory({ category: data.blog.category });
+          }
+        };
+
+        blogData();
+      }
+    }
+  }, [isNewBlog]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,23 +82,41 @@ const CreateBlog = () => {
           content,
           isPublish,
         };
+        if (isNewBlog === true) {
+          const response = await fetch(`${BASE_URL}/blog`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userProfile.access_token}`,
+            },
+            body: JSON.stringify({ ...blog }),
+          });
 
-        const response = await fetch(`${BASE_URL}/blog`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userProfile.access_token}`,
-          },
-          body: JSON.stringify({ ...blog }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          toast.success(data.message);
-          setIsPublish(true);
-          setContent("");
-          setFormData("");
-          setCategory({ category: "Select Category" });
+          if (response.ok) {
+            const data = await response.json();
+            toast.success(data.message);
+            setIsPublish(true);
+            setContent("");
+            setFormData("");
+            setCategory({ category: "Select Category" });
+          }
+        } else {
+          const response = await fetch(`${BASE_URL}/blog/${editBlogId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userProfile.access_token}`,
+            },
+            body: JSON.stringify({ ...blog }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            toast.success(data.message);
+            setIsPublish(true);
+            setContent("");
+            setFormData("");
+            setCategory({ category: "Select Category" });
+          }
         }
       } else {
         toast.error("all field Required !!");

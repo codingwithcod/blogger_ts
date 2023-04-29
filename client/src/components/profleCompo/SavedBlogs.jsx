@@ -8,15 +8,17 @@ import { MdCloudDone } from "react-icons/md";
 import { AiOutlineDelete } from "react-icons/ai";
 import { toast } from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import LoadingBlogCard from "../Loading/LoadingBlogCard";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SavedBlogs = () => {
   const { userProfile } = useAuthStore();
   const [blogs, setBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // /** for fetching my blogs section blogs */
   useEffect(() => {
-    const fetchMyBlogs = async () => {
+    const fetchMySavedBlogs = async () => {
       const response = await fetch(`${BASE_URL}/user/my-saved-blog`, {
         method: "GET",
         headers: {
@@ -29,9 +31,10 @@ const SavedBlogs = () => {
         navigate("/");
       } else {
         setBlogs(data.blogs);
+        setIsLoading(false);
       }
     };
-    fetchMyBlogs();
+    fetchMySavedBlogs();
   }, [handlePublishBlog]);
 
   /** Publish or unPublish blog  */
@@ -72,6 +75,12 @@ const SavedBlogs = () => {
     <div className="m-2 flex  justify-center ">
       <Toaster />
       <div className="flex flex-col overflow-y-auto scrollHide h-[55vh]  w-[9n0%]  mt-2">
+        {isLoading && (
+          <>
+            <LoadingBlogCard />
+            <LoadingBlogCard />
+          </>
+        )}
         {blogs.length == 0 ? (
           <div className="text-2xl font-semibold mt-10 text-blue-500">
             No Blogs found
@@ -147,10 +156,12 @@ const SavedBlogs = () => {
                     <span>Publish</span>
                     <MdCloudDone />
                   </button>
-                  <button className="px-3 md:px-5 py-1 md:py-[6px]  text-green-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-green-100 hover:border-green-100  cursor-pointer gap-1">
-                    <span>Edit</span>
-                    <IoCreateOutline />
-                  </button>
+                  <Link to={`/create-blog?new=false&id=${_id}`}>
+                    <button className="px-3 md:px-5 py-1 md:py-[6px]  text-green-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-green-100 hover:border-green-100  cursor-pointer gap-1">
+                      <span>Edit</span>
+                      <IoCreateOutline />
+                    </button>
+                  </Link>
                   <button
                     onClick={() => handleDeleteBlog(_id)}
                     className="px-3 md:px-5 py-1 md:py-[6px]  text-red-500 border border-slate-300  rounded-full  text-sm font-semibold flex justify-center items-center  hover:bg-red-100 hover:border-red-100  cursor-pointer gap-1"
