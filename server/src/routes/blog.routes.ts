@@ -7,12 +7,14 @@ import {
   otherFromUser,
   postBlog,
   searchByQuery,
+  updateBlog,
 } from "../controllers/blog.controller";
 import requireUser from "../middleware/requireUser";
 import validate from "../middleware/validate";
 const blogRoutes = express.Router();
 
 blogRoutes.post("/", requireUser, postBlog);
+blogRoutes.put("/:blogId", requireUser, updateBlog);
 blogRoutes.get("/", getAllBlog);
 blogRoutes.get("/search", searchByQuery);
 blogRoutes.get("/:id", getOneBlog);

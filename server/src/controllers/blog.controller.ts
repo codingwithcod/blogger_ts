@@ -18,6 +18,24 @@ export const postBlog: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+/** ---------- updating blog here --------- */
+export const updateBlog: RequestHandler = async (req, res, next) => {
+  const { isPublish } = req.body;
+  const { blogId } = req.params;
+  try {
+    const blog = await blogModel.findByIdAndUpdate(blogId, {
+      ...req.body,
+    });
+    res.status(201).json({
+      success: true,
+      message: isPublish
+        ? "Blog Edit & published successfully"
+        : "Blog Edit & saved successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 /** ---------- geting all blog ----------- */
 export const getAllBlog: RequestHandler = async (req, res, next) => {
@@ -108,7 +126,7 @@ export const isLikedBlog: RequestHandler = async (req, res, next) => {
   }
 };
 
-// /** boiler plate code picse */
+// /** Searching blogs by headding and description */
 export const searchByQuery: RequestHandler = async (req, res, next) => {
   const blogQuery = req.query.q
     ? {
@@ -116,12 +134,14 @@ export const searchByQuery: RequestHandler = async (req, res, next) => {
           {
             heading: {
               $regex: req.query.q,
+              $options: "i",
             },
           },
 
           {
             description: {
               $regex: req.query.q,
+              $options: "i",
             },
           },
         ],

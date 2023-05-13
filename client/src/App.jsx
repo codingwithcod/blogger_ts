@@ -14,7 +14,7 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-        <div className="relative bg-blue-300  max-w-[1200px]">
+        <div className="relative bg-slate-50 m-auto  max-w-[1300px]">
           <Navbar setOpenMenu={setOpenMenu} />
           <SideMenu setOpenMenu={setOpenMenu} openMenu={openMenu} />
 

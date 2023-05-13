@@ -7,6 +7,7 @@ import FollowIcon from "../assets/follow.svg";
 import FollowedIcon from "../assets/followed.svg";
 import useAuthStore from "../store/authStore";
 import OtherFromCard from "../components/OtherFromCard";
+import LoadingBlogDetail from "../components/Loading/LoadingBlogDetail";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const BlogDetail = () => {
@@ -15,6 +16,7 @@ const BlogDetail = () => {
   const [isFollowed, setisFollowed] = useState(false);
   const [isSelf, setIsSelf] = useState(false);
   const [otherFromUser, setOtherFromUser] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { userProfile } = useAuthStore();
 
@@ -35,6 +37,7 @@ const BlogDetail = () => {
         navigate("/");
       } else {
         setBlog(data.blog);
+        setIsLoading(false);
       }
     };
 
@@ -103,8 +106,9 @@ const BlogDetail = () => {
   return (
     <div className="main_container flex">
       <Toaster />
-
       <div className="contain w-full md:w-[70%] h-[90vh] overflow-y-auto scrollHide pl-10 mt-2 p-5 ">
+        {isLoading && <LoadingBlogDetail />}
+
         <div className=" flex flex-col    gap-5   h-auto   ">
           <div className="w-[100%] sm:w-[60%] md:w-[100%] ">
             <div className="user-profile flex items-center gap-2">
@@ -140,7 +144,6 @@ const BlogDetail = () => {
           <div dangerouslySetInnerHTML={{ __html: blog?.content }}></div>
         </div>
       </div>
-
       {/* ======================= right side bar   ========================= */}
       <div className="profile w-[30%] hidden md:block border-l px-5 ">
         <div className="bg-white flex flex-col mt-5 justify-center items-center">

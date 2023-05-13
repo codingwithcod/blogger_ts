@@ -1,5 +1,4 @@
 import { RequestHandler } from "express-serve-static-core";
-import mongoose from "mongoose";
 import blogModel from "../models/blog.model";
 import userModel from "../models/user.model";
 
@@ -60,7 +59,7 @@ export const isUserFollowed: RequestHandler = async (req, res, next) => {
   const { userId } = res.locals.user;
   const { blogUserId } = req.params;
   try {
-    if (userId == blogUserId) {
+    if (userId === blogUserId) {
       res.status(200).json({
         success: true,
         isSelf: true,
