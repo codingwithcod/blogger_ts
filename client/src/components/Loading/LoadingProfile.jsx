@@ -1,6 +1,8 @@
+import LoadingBlogCard from "./LoadingBlogCard";
+
 const LoadingProfile = () => {
   return (
-    <div className=" w-full h-full">
+    <div className=" w-full h-full ">
       <div className="flex  flex-col bg-gray-50">
         <div className="top-box flex flex-col sm:flex-row justify-between  gap-5 p-2  md:max-w-[80%]  ">
           <div className="top-box flex gap-5 p-5 w-full sm:w-[50%]  ">
@@ -30,6 +32,10 @@ const LoadingProfile = () => {
         </div>
 
         <div className="p-2 pb-0 flex mx-5 gap-2 border-b"></div>
+      </div>
+      <div className="mt-10 ">
+        <LoadingBlogCard />
+        <LoadingBlogCard />
       </div>
     </div>
   );

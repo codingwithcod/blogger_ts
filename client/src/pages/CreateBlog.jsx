@@ -14,7 +14,6 @@ import { MdCloudDone, MdOutlineDataSaverOn } from "react-icons/md";
 const CreateBlog = () => {
   const [content, setContent] = useState("");
   const [formData, setFormData] = useState("");
-  console.log(">>>>>>>>>>>>>>>>>", formData);
   const [category, setCategory] = useState({ category: "Select Category" });
   const [isPublish, setIsPublish] = useState(false);
 
@@ -34,9 +33,8 @@ const CreateBlog = () => {
   });
   /** -----------  FOR EDIT BLOG ---------- */
   useEffect(() => {
-    if (isNewBlog === true) {
+    if (isNewBlog == "true") {
     } else {
-      console.log("this is edit blog--------");
       if (editBlogId) {
         const blogData = async () => {
           const response = await fetch(`${BASE_URL}/blog/${editBlogId}`, {
@@ -82,7 +80,7 @@ const CreateBlog = () => {
           content,
           isPublish,
         };
-        if (isNewBlog === true) {
+        if (isNewBlog == "true") {
           const response = await fetch(`${BASE_URL}/blog`, {
             method: "POST",
             headers: {
@@ -192,7 +190,8 @@ const CreateBlog = () => {
               ref={editor}
               value={content}
               name="htmlCode"
-              onChange={(newContent) => setContent(newContent)}
+              // onChange={(newContent) => setContent(newContent)}
+              onBlur={(newContent) => setContent(newContent)}
             />
           </div>
           <div className="flex justify-evenly w-[50%]">

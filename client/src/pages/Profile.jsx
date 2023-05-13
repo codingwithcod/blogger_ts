@@ -39,6 +39,7 @@ const Profile = () => {
       const data = await response.json();
       if (data.success == false) {
         navigate("/");
+        removeUser();
       } else {
         setUser(data.user);
         setIsLoading(false);
@@ -51,7 +52,7 @@ const Profile = () => {
   const liked = !isMyBlog ? " border-black" : " text-gray-400 border-white";
 
   return (
-    <div className=" w-full h-full">
+    <div className=" w-full h-[100vh] overflow-y-scroll ">
       {isLoading ? (
         <LoadingProfile />
       ) : (
@@ -131,7 +132,7 @@ const Profile = () => {
               </button>
             </div>
           </div>
-          <div>
+          <div className="mb-5">
             {isMyBlog === "my-blog" && <MyBlogs />}
             {isMyBlog === "saved" && <SavedBlogs />}
             {isMyBlog === "liked" && <div>liked blogs</div>}
